@@ -1,7 +1,6 @@
 "use strict";
 
 var result = document.getElementById("result");
-var calculation = document.getElementById("calculation");
 var buttons = document.getElementById("buttons");
 
 
@@ -10,6 +9,7 @@ var buttons = document.getElementById("buttons");
     var number2 = '';
     var ans = '';
     var operator = '';
+    var process = [];
     
     //building up numbers by clicking on buttons
     function numberAppend(pressed){
@@ -26,10 +26,15 @@ var buttons = document.getElementById("buttons");
             return;
         
         //append to number1 if operator isn't yet given
-        if(operator == '')
-            number1 += pressed;
-        else
-            number2 += pressed;
+        //prevent typing in to large numbers
+        if(operator == ''){
+            if(number1.length <9)
+                number1 += pressed;
+        }
+        else{
+            if(number2.length <9)
+                number2 += pressed;
+        }
     }
     
     function dotAppend(){
@@ -119,33 +124,22 @@ var buttons = document.getElementById("buttons");
     
     //storing values to know if any of them changed
     //compared to previous call to updateDisplay
-    var previousValues = ['' , '' , '']
+    var previousValues = [number1 , operator , number2]
     
     //checking whether a property changed 
     //if so display it on the screen
     function updateDisplay(){
         
-        if(previousValues[1] != number2){
-            result.innerHTML = number2;
-            previousValues[1] = number2;
+        if(previousValues[1] != operator){
+            result.innerHTML = displayOperator();
+            previousValues[1] = operator;
         }
         
-        if(previousValues[2] != operator){
+        if(previousValues[2] != number2){
             
-            //showing proper symbols for division and multiplication
-            switch(operator){
-                case '/':
-                    result.innerHTML = '&divide;';
-                    break;
-                case '*':
-                    result.innerHTML = '&times;';
-                    break;
-                default:
-                    result.innerHTML = operator;
-                    break;
-            }
+            result.innerHTML = number2;
             
-            previousValues[2] = operator;
+            previousValues[2] = number2;
         }
         
         if(previousValues[0] != number1){
@@ -161,12 +155,28 @@ var buttons = document.getElementById("buttons");
             previousValues[0] = number1;
         }
         
-        updateHistory();
-        
+        //updateHistory();
+    
     }
 
-    function updateHistory(){
-        calculation.innerHTML = number1 + operator + number2 + '=' + ans;
+    function displayOperator(){
+        
+        var display;
+        
+        //showing proper symbols for division and multiplication
+        switch(operator){
+            case '/':
+                display = '&divide;';
+                break;
+            case '*':
+                display = '&times;';
+                break;
+            default:
+                display = operator;
+                break;
+            }
+        
+        return display;
     }
 
 //adding actions to be performed on different buttons
@@ -186,11 +196,12 @@ buttons.addEventListener("click", function (event) {
     }
     else if(clicked.id == "equals"){
         calculate();
-        //console.log('number1: '+calculator.number1+' number2: '+calculator.number2+' ans: '+calculator.ans+' operator: '+calculator.operator);
     }
     else if(clicked.id == "ac"){
         ac();
     }
+    else if(clicked.id == 'ce')
+        ce();
     else if(clicked.id == 'ans')
         useAns();
     

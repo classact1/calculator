@@ -27,18 +27,10 @@ body
 
 #screen h1
 {
-    margin: 10px 10px 0 0;
+    margin: 20px 10px 0 0;
     font-size: 60px;
     font-weight: 300;
     color: #00D7FF;
-}
-
-#screen h2
-{
-    margin: 0px 15px 0 0;
-    font-size: 20px;
-    font-weight: 300;
-    color: #009BC0;
 }
 
 #buttons
@@ -102,6 +94,11 @@ button:active
 }
 
 button.zero
+{
+    width: 160px;
+}
+
+#ac
 {
     width: 160px;
 }
