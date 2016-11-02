@@ -9,7 +9,6 @@ var buttons = document.getElementById("buttons");
     var number2 = '';
     var ans = '';
     var operator = '';
-    var process = [];
     
     //building up numbers by clicking on buttons
     function numberAppend(pressed){
@@ -94,12 +93,19 @@ var buttons = document.getElementById("buttons");
             
         var temp = ans.toString();
         
+        //proper format of very small numbers
+        if(temp.indexOf("e") != -1 && temp.indexOf("e") > 3){
+            var start = temp.slice(0,4);
+            var end = temp.slice(temp.indexOf('e'));
+            
+            temp = start + end;
+        }
+        
         //shorten numbers over 9 digits long
         if(temp.length > 9){
             temp = temp.slice(0,9);
-            ans = Number(temp);
         }
-        
+        ans = Number(temp);
     }
     
     //clears all the values
@@ -138,11 +144,11 @@ var buttons = document.getElementById("buttons");
         if(previousValues[2] != number2){
             
             result.innerHTML = number2;
-            
             previousValues[2] = number2;
         }
         
-        if(previousValues[0] != number1){
+        //!== to prevent coercion of types
+        if(previousValues[0] !== number1){
             
             //when calculator is cleared
             //set display to 0 so it doesn't look weird
@@ -151,8 +157,16 @@ var buttons = document.getElementById("buttons");
                 return;
             }
             
-            result.innerHTML = number1;
-            previousValues[0] = number1;
+            //when dividing by 0 display error instead of infinity
+            if(!isFinite(number1)){
+                result.innerHTML = "error";
+                previousValues[0] = "error";
+                ac();
+            }
+            else{
+                result.innerHTML = number1;
+                previousValues[0] = number1;
+            }
         }
         
     }
@@ -205,4 +219,6 @@ buttons.addEventListener("click", function (event) {
 });
 
 
-
+function logNumbers(){
+    console.log("Number1: "+number1+" operator: "+operator+" Number2: "+number2+" ans: "+ans);
+}
